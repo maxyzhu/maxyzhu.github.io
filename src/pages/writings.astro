@@ -1,0 +1,32 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Writings">
+    <h2 class="page-title">Writings</h2>
+    <p class="subtitle">
+        Notes on architecture, software, and the space between.
+    </p>
+    <div class="post-list">
+        <p class="empty">No posts yet.</p>
+    </div>
+</Layout>
+
+<style>
+    .page-title {
+        font-size: 2rem;
+        font-weight: normal;
+        margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+        color: var(--color-muted);
+        margin-bottom: 3rem;
+        font-size: 1rem;
+    }
+
+    .empty {
+        color: var(--color-hint);
+        font-size: 0.95rem;
+    }
+</style>

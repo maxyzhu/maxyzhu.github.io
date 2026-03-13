@@ -1,0 +1,89 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+const nav = [
+  { label: "Chat", href: "/" },
+  { label: "Atelier", href: "/atelier" },
+  { label: "Writings", href: "/writings" },
+];
+const current = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} — MINGXI ZHU</title>
+  </head>
+  <body>
+    <header>
+      <a href="/" class="logo">MINGXI ZHU</a>
+      <nav>
+        {
+          nav.map(({ label, href }) => (
+            <a
+              href={href}
+              class={
+                current === href || (href !== "/" && current.startsWith(href))
+                  ? "active"
+                  : ""
+              }
+            >
+              {label}
+            </a>
+          ))
+        }
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style>
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 3rem;
+    border-bottom: 1px solid #e0ded9;
+  }
+
+  .logo {
+    font-size: 1rem;
+    font-weight: normal;
+    text-decoration: none;
+    color: #1a1a1a;
+    letter-spacing: 0.05em;
+  }
+
+  nav {
+    display: flex;
+    gap: 2.5rem;
+  }
+
+  nav a {
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: #888;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  nav a:hover,
+  nav a.active {
+    color: var(--color-accent);
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 3rem;
+  }
+</style>

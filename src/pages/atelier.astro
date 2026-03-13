@@ -1,0 +1,164 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const projects = [
+  {
+    title: "Affordable Housing, Bellevue",
+    tags: ["Architecture"],
+    year: "2023",
+    description: "Mixed-use affordable housing development.",
+  },
+  {
+    title: "involveMINT Wallet UI",
+    tags: ["Software"],
+    year: "2025",
+    description: "Venmo-style wallet interface with Framer Motion animations.",
+  },
+  {
+    title: "AI-Augmented Design Pipeline",
+    tags: ["Architecture", "Software"],
+    year: "2025",
+    description:
+      "Multi-agent LLM pipeline replacing traditional architecture workflows.",
+  },
+];
+
+const allTags = ["All", "Architecture", "Software"];
+---
+
+<Layout title="Atelier">
+  <h2 class="page-title">Atelier</h2>
+  <div class="filters">
+    {
+      allTags.map((tag) => (
+        <button class="filter-btn" data-tag={tag}>
+          {tag}
+        </button>
+      ))
+    }
+  </div>
+  <div class="grid" id="project-grid">
+    {
+      projects.map((p) => (
+        <div class="card" data-tags={p.tags.join(",")}>
+          <div class="card-header">
+            <span class="year">{p.year}</span>
+            <div class="tags">
+              {p.tags.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+            </div>
+          </div>
+          <h3>{p.title}</h3>
+          <p>{p.description}</p>
+        </div>
+      ))
+    }
+  </div>
+</Layout>
+
+<script>
+  const btns = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
+  const cards = document.querySelectorAll<HTMLElement>(".card");
+
+  btns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      btns.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      const tag = btn.dataset.tag;
+      cards.forEach((card) => {
+        const tags = card.dataset.tags?.split(",") ?? [];
+        card.style.display =
+          tag === "All" || tags.includes(tag!) ? "block" : "none";
+      });
+    });
+  });
+
+  btns[0].classList.add("active");
+</script>
+
+<style>
+  .page-title {
+    font-size: 2rem;
+    font-weight: normal;
+    margin-bottom: 2rem;
+  }
+
+  .filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .filter-btn {
+    background: none;
+    border: 1px solid var(--color-border);
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: var(--color-muted);
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: #1a1a1a;
+    border-color: #1a1a1a;
+    color: var(--color-bg);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover {
+    border-color: var(--color-accent);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .year {
+    font-size: 0.8rem;
+    color: var(--color-hint);
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: var(--color-bg);
+    color: var(--color-muted);
+  }
+
+  .card h3 {
+    font-size: 1.1rem;
+    font-weight: normal;
+    margin-bottom: 0.5rem;
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
+</style>

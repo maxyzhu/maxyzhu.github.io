@@ -1,0 +1,32 @@
+:root {
+    /* Background */
+    --color-bg: #f9f8f5;
+
+    /* Typography */
+    --color-text: #1a1a1a;
+    --color-muted: #888;
+    --color-hint: #aaa;
+
+    /* Border */
+    --color-border: #e0ded9;
+
+    /* Surface */
+    --color-surface: #f0ede8;
+
+    /* Accent */
+    --color-accent: #2563eb;
+    --color-accent-soft: #eff6ff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    min-height: 100vh;
+}
