@@ -1,32 +1,121 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+
+const posts = (await getCollection(
+  "writings",
+)) as CollectionEntry<"writings">[];
+type Post = CollectionEntry<"writings">;
+const sorted: Post[] = posts.sort((a, b) => +b.data.date - +a.data.date);
 ---
 
 <Layout title="Writings">
-    <h2 class="page-title">Writings</h2>
-    <p class="subtitle">
-        Notes on architecture, software, and the space between.
-    </p>
-    <div class="post-list">
-        <p class="empty">No posts yet.</p>
-    </div>
+  <h2 class="page-title">Writings</h2>
+  <p class="subtitle">
+    Thoughts on architecture, software, and the space between.
+  </p>
+  <div class="post-list">
+    {sorted.length === 0 && <p class="empty">No posts yet.</p>}
+    {
+      sorted.map((post) => (
+        <a href={`/writings/${post.id}`} class="post-item">
+          <div class="post-meta">
+            <span class="date">
+              {post.data.date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
+            <div class="tags">
+              {post.data.tags?.map((tag: string) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+          </div>
+          <h3>{post.data.title}</h3>
+          <p class="description">{post.data.description}</p>
+        </a>
+      ))
+    }
+  </div>
 </Layout>
 
 <style>
-    .page-title {
-        font-size: 2rem;
-        font-weight: normal;
-        margin-bottom: 0.75rem;
-    }
+  .page-title {
+    font-size: 2rem;
+    font-weight: normal;
+    margin-bottom: 0.75rem;
+  }
 
-    .subtitle {
-        color: var(--color-muted);
-        margin-bottom: 3rem;
-        font-size: 1rem;
-    }
+  .subtitle {
+    color: var(--color-muted);
+    margin-bottom: 3rem;
+    font-size: 1rem;
+  }
 
-    .empty {
-        color: var(--color-hint);
-        font-size: 0.95rem;
-    }
+  .empty {
+    color: var(--color-hint);
+    font-size: 0.95rem;
+  }
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .post-item {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--color-border);
+    transition: opacity 0.2s;
+  }
+
+  .post-item:first-child {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .post-item:hover {
+    opacity: 0.6;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .date {
+    font-size: 0.8rem;
+    color: var(--color-hint);
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-muted);
+  }
+
+  .post-item h3 {
+    font-size: 1.2rem;
+    font-weight: normal;
+    margin-bottom: 0.4rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
 </style>

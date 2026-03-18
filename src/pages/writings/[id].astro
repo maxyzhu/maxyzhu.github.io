@@ -1,0 +1,96 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+
+export async function getStaticPaths() {
+  const posts = (await getCollection(
+    "writings",
+  )) as CollectionEntry<"writings">[];
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<"writings">;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout title={post.data.title}>
+  <article>
+    {
+      post.data.cover && (
+        <Image src={post.data.cover} alt={post.data.title} class="cover" />
+      )
+    }
+    <h1>{post.data.title}</h1>
+    <p class="date">
+      {
+        post.data.date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      }
+    </p>
+    <Content />
+  </article>
+</Layout>
+
+<style>
+  h1 {
+    font-size: 2rem;
+    font-weight: normal;
+    margin-bottom: 0.5rem;
+  }
+
+  .date {
+    color: var(--color-hint);
+    font-size: 0.85rem;
+    margin-bottom: 3rem;
+  }
+
+  article :global(p) {
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    color: var(--color-text);
+  }
+
+  article :global(h2) {
+    font-size: 1.4rem;
+    font-weight: normal;
+    margin: 2rem 0 1rem;
+  }
+
+  article :global(ol),
+  article :global(ul) {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  article :global(li) {
+    line-height: 1.8;
+    margin-bottom: 0.5rem;
+  }
+
+  article :global(img) {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .cover {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+  }
+</style>
